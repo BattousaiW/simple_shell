@@ -3,7 +3,7 @@
 /**
  * get_env - get the value of an environment variable
  * @c: name of the environment variable
- * @env:pointer to the environment variables
+ * @envp:pointer to the environment variables
  * Return: char* with the matching path
  */
 char *get_env(const char *c, char **envp)
