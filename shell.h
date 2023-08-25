@@ -1,53 +1,90 @@
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef __SHELL_H__
+#define __SHELL_H__
 
-/*libs */
+/*libraries*/
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
 #include <unistd.h>
-#include <sys/types.h>
+#include <string.h>
 #include <sys/stat.h>
-#include <fcntl.h>
 #include <errno.h>
-#include <signal.h>
+#include <fcntl.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <stdbool.h>
 
-#define PROMPT "$ "
-
-/*delimeter*/
-#define ENVDELIM ":="
-
-/* child process */
-int start_child(char **args, char **dir);
-int run_cmd(char **args, char **dir);
-
-
-/*loop cycle*/
-int execute(char **args, char **dir);
-char *get_env(const char *c, char **env);
-char **set_env(char **env);
-char **token(char *c);
-char **fullpath(char *path, char *envdelim);
-
-/* string functions */
-char *_strcat(char *str1, char *str2);
-int _puts(char *string);
-int _putchar(char c);
-int word_count(char *str);
-int _strlen(char *str);
+/*string_handlers*/
+char *_strdup(char *str);
+char *_strchr(char *str, int chr);
+int _strlen(const char *str);
 int _strcmp(char *s1, char *s2);
-char *_strcpy(char *dest, char *src);
-int _wordcount(char *string, char delim);
-char *read_line(void);
-void signal_function(int c);
+int _strncmp(const char *first, const char *second, int n);
+
+/*command_handler*/
+char *_getpath(void);
+char **token_maker(char *str);
+void exec_cmd(char *c, char **cmd);
+char *pathappend(char *path, char *cmd);
+char *try_paths(char **p, char *cmd);
+
+/*built-ins*/
+void env_builtin(void);
+void exiter(char **cmd, char *b);
+int is_builtin(char **cmd, char *b);
+void prompt_printer(void);
+void sighandle(int n);
+
+/*helper function*/
+int check_type(char **cmd, char *b);
+void free_cmds(char **m);
 
 
-/*BuiltIns*/
-int shell_cd(char **args);
-int shell_help(void);
-int shell_exit(void);
 
 
-#endif
+/*environment variables*/
+extern __sighandler_t signal(int __sig, __sighandler_t __handler);
+extern char **environ;
+
+/**
+ * struct builtins - Handles builtins
+ * @env: First member
+ * @exit: Second member
+ *
+ * Description: builtin commands
+*/
+struct builtins
+{
+char *env;
+char *exit;
+
+} builtins;
+
+
+
+/**
+ * struct info - Status info struct
+ * @final_exit: First member
+ * @ln_count: Second member
+ *
+ * Description: Used in error handling
+ */
+struct info
+{
+int final_exit;
+int ln_count;
+} info;
+
+
+/**
+ * struct flags - Holds flags
+ * @interactive: First member
+ *
+ * Description: used to handle
+ * boolean switches
+ */
+struct flags
+{
+bool interactive;
+} flags;
+
+#endif /* __SHELL_H__ */
